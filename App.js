@@ -1,20 +1,37 @@
 import { useState } from "react";
+import { ImageBackground, StyleSheet, SafeAreaView } from "react-native";
+import { useFonts } from "expo-font";
+import { LinearGradient } from "expo-linear-gradient";
 import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
-import { ImageBackground, StyleSheet, SafeAreaView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import GameOverScreen from "./screens/GameOverScreen";
 import Colors from "./constants/colors";
 
 export default function App() {
 	let screen = <StartGameScreen onPickNumber={pickedNumberHandler} />;
 	const [userNumber, setUserNumber] = useState();
+	const [gameIsOver, setGameIsOver] = useState(true);
 
 	function pickedNumberHandler(pickedNumber) {
 		setUserNumber(pickedNumber);
+		setGameIsOver(false);
+	}
+
+	function gameOverHandler() {
+		setGameIsOver(true);
 	}
 
 	if (userNumber) {
-		screen = <GameScreen />;
+		screen = (
+			<GameScreen
+				userNumber={userNumber}
+				onGameOver={gameOverHandler}
+			/>
+		);
+	}
+
+	if (gameIsOver && userNumber) {
+		screen = <GameOverScreen />;
 	}
 
 	return (
